@@ -1,0 +1,275 @@
+﻿<Window x:Class="Image_Editing_WPF_.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:local="clr-namespace:Image_Editing_WPF_"
+        xmlns:hw="http://schemas.hpod9.com/haley/wpf"
+        xmlns:local2="http://schemas.hpod9.com/haley/mvvm"
+        mc:Ignorable="d"
+        Title="Image Editing Application" Height="650" Width="1000"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResizeWithGrip"
+        >
+    <Grid ShowGridLines="False">
+
+        <Grid.Background>
+            <LinearGradientBrush>
+                <LinearGradientBrush.GradientStops>
+                    <GradientStop Color="#FF0DFBFB" Offset="0.00"/>
+                    <GradientStop Color="#FF008247" Offset="0.50"/>
+                    <GradientStop Color="#FF74A89A" Offset="1.00"/>
+                </LinearGradientBrush.GradientStops>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150" MaxWidth="250"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        
+        <Label 
+            Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0"               
+            HorizontalAlignment="Center"               
+            FontFamily="Arial Black" FontSize="20"               
+            Foreground="Blue"               
+            >
+            IMAGE EDITING APPLICATION
+        </Label>
+        
+        <GridSplitter 
+            Grid.Column="1"                      
+            Grid.RowSpan="2"                      
+            Width="3" HorizontalAlignment="Left"                        
+            VerticalAlignment="Stretch"                      
+            Background="Black" Margin="0,8,0,-8"                      
+            >            
+        </GridSplitter>
+
+        <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" ShowGridLines="False" Margin="0,8,0,-8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel 
+                Orientation="Vertical" 
+                Margin="5" Grid.Row="0">
+                
+                <DockPanel>
+                    
+                    <Label 
+                        DockPanel.Dock="Left"                           
+                        FontWeight="Bold"                           
+                        FontFamily="Franklin Gothic Medium"
+                        >
+                        Browse Image
+                    </Label>
+                    
+                    <Button 
+                        x:Name="btnBrowse" FontSize="15" 
+                        Content="..."                             
+                        HorizontalAlignment="Right"                            
+                        MinWidth="40"                            
+                        FontWeight="Bold"                           
+                        Click="btnBrowse_Click"
+                        >                        
+                    </Button>
+                    
+                </DockPanel>
+                
+                <StackPanel >
+                    
+                    <Label 
+                        Margin="0,5,0,5"                          
+                        FontWeight="Bold"                           
+                        FontSize="14" 
+                        FontFamily="Franklin Gothic Medium" 
+                        >
+                        Editing Mode
+                    </Label>
+                    
+                    <ComboBox 
+                        x:Name="cmboEditingMode" 
+                        IsEditable="False" Margin="0,5,0,5"                              
+                        SelectedIndex="1"                              
+                        FontWeight="Bold"                              
+                        SelectionChanged="cmboEditingMode_SelectionChanged"
+                              >
+                        <ComboBoxItem >None</ComboBoxItem>
+                        <ComboBoxItem >Pencil</ComboBoxItem>
+                        <ComboBoxItem >Select</ComboBoxItem>
+                        <ComboBoxItem >Erase by Point</ComboBoxItem>
+                        <ComboBoxItem >Erase by Stroke</ComboBoxItem>
+                        <ComboBoxItem >Gesture only</ComboBoxItem>
+                        <ComboBoxItem >Pencil and Gesture</ComboBoxItem>
+                    </ComboBox>
+                    
+                    <Label  
+                        Margin="0,5,0,5"                            
+                        FontWeight="Bold"                           
+                        FontSize="14" 
+                        FontFamily="Franklin Gothic Medium">
+                        Pencil size
+                    </Label>
+                    
+                    <TextBox 
+                        x:Name="txtPencilSize"
+                        FontWeight="Bold"
+                        HorizontalAlignment="Left" MinWidth="140"                             
+                        Margin="0,5,0,10"                             
+                        KeyDown="txtPencilSize_KeyDown"                             
+                        PreviewKeyDown="txtPencilSize_PreviewKeyDown"
+                        >
+                        0
+                    </TextBox>
+
+                    <GroupBox Header="Colors" 
+                              FontWeight="Bold"
+                              Padding="5">
+                        <StackPanel>
+                            
+                            <hw:ColorPickerButton 
+                                Content="Pencil Color" FontWeight="Bold"
+                                HorizontalContentAlignment="Center"
+                                Margin="0,2,5,20"
+                                x:Name="cpbtnPencil" SelectedColor="Black"                                          
+                                >
+                            </hw:ColorPickerButton>
+                            
+                            <hw:ColorPickerButton 
+                                x:Name="cpbtnCanvas" FontWeight="Bold"
+                                Content="Canvas Color" 
+                                HorizontalContentAlignment="Center" SelectedColor="AliceBlue"
+                                SelectedBrush="AliceBlue"
+                                Margin="0,2,5,20"
+                                >
+                                
+                            </hw:ColorPickerButton>
+                            
+                            <hw:ColorPicker 
+                                HideColorPalette="True" 
+                                HideRGBComponents="True" 
+                                SelectedBrush="{Binding SelectedBrush, ElementName=cpbtnPencil}"
+                                SelectedBrushChanged="ColorPicker_SelectedBrushChanged" Height="2" 
+                                RenderTransformOrigin="0.5,0.5" Margin="-50,0,200,0"
+                                Visibility="Hidden"                                            
+                                >
+                                
+                                <hw:ColorPicker.RenderTransform>
+                                    
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform Angle="180.433"/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                    
+                                </hw:ColorPicker.RenderTransform>
+                                
+                            </hw:ColorPicker>
+                            
+                        </StackPanel>
+                        
+                    </GroupBox>
+                    
+                    <Expander Header="Info">
+                        
+                        <TextBlock>
+                            
+                            Application was designed <LineBreak/>
+                            and created by Phiwokwakhe<LineBreak/>
+                            If you need more info visit<LineBreak/>
+                            my github profile.<LineBreak/>
+                            
+                            <Hyperlink 
+                                NavigateUri="https://github.com/Shisui-Pho?tab=repositories"
+                                x:Name="githubProfile"
+                                Click="githubProfile_Click">
+                                @Phiwo03
+                            </Hyperlink>
+                            
+                        </TextBlock>
+                        
+                    </Expander>
+                    
+                </StackPanel>
+                
+            </StackPanel>
+            
+            <StackPanel 
+                Grid.Row="1"
+                >
+                
+                <Button x:Name="btnCleanCanvas" 
+                        VerticalAlignment="Center" Margin="5,5,0,20" 
+                        MinHeight="30"
+                        Click="btnCleanCanvas_Click"
+                        >
+                    Clean Canvas
+                </Button >
+                
+                <Button x:Name="btnSaveImage" 
+                        VerticalAlignment="Center" 
+                        Margin="5,5,0,20" MinHeight="30"
+                        Click="btnSaveImage_Click">
+                    Save new image
+                </Button>
+                
+                <Button x:Name="btnClose" VerticalAlignment="Center" 
+                        Margin="5,5,0,8" MinHeight="30"
+                        Click="btnClose_Click">
+                    Close
+                </Button>
+                
+            </StackPanel>
+            
+        </Grid>
+        
+        <Grid  
+            Grid.Row="1"
+            Grid.Column="2" Margin="0,8,0,-8"
+            >
+            <Grid.ColumnDefinitions>
+                
+                <ColumnDefinition Width="650"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="550"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            
+            <GridSplitter 
+                Grid.Column="1" 
+                Grid.Row="0" Width="3"                          
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Stretch"
+                >
+            </GridSplitter>
+            
+            <GridSplitter 
+                Grid.Column="0" Grid.Row="1" 
+                Height="3"                          
+                HorizontalAlignment="Stretch" VerticalAlignment="Top">
+            </GridSplitter>
+            
+            <InkCanvas
+                Grid.Column="0"
+                Margin="3,0,0,0"
+                Grid.Row="0"                   
+                x:Name="inkCanvasImage"                   
+                Background="{Binding ElementName=cpbtnCanvas, Path=SelectedBrush}"
+                ResizeEnabled="True"                       
+                >
+            </InkCanvas>
+        </Grid>
+    </Grid>
+</Window>
